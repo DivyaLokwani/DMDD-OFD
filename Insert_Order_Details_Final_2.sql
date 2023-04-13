@@ -16,7 +16,13 @@ EX_QTY_ISSUE EXCEPTION;
 --EX_CUSTOMER_ISSUE EXCEPTION;
 val20 NUMBER;
 val30 NUMBER;
+var70 NUMBER;
 --val40 varchar(100);
+--var71 varchar(40);
+--var72 varchar(40);
+EX_ID_ISSUE EXCEPTION;
+pragma exception_init(EX_ID_ISSUE, -02291); 
+--EX_PRD_ISSUE EXCEPTION;
 
 BEGIN
 
@@ -45,9 +51,20 @@ if p_ptype not in ('Debit_Card', 'Credit_Card', 'Gift_Card') then
 raise EX_PAYMENT_TYPE;
 end if;
 
-if p_qty <0 or null then 
+EXECUTE IMMEDIATE ('select ofd_products.product_quantity from ofd_products where upper(ofd_products.product_id) = upper('''||p_p_id||''')') into var70;
+if var70< p_qty then 
 RAISE EX_QTY_ISSUE;
 end if;
+
+--EXECUTE IMMEDIATE ('select ofd_customer.customer_id from ofd_customer where upper(ofd_customer.customer_id) = upper('''||p_c_id||''')') into var71;
+--if var71 = 0 then 
+--RAISE EX_CUS_ISSUE;
+--end if;
+
+--EXECUTE IMMEDIATE ('select ofd_products.product_id from ofd_products where upper(ofd_products.product_id) = upper('''||p_p_id||''')') into var72;
+--if var72 = '0' then
+--RAISE EX_PRD_ISSUE;
+--end if;
 
 insert into ofd_orders values (o_id, p_dop, p_c_id, p_ptype);
 commit;
@@ -67,21 +84,17 @@ DBMS_OUTPUT.PUT_LINE('Payment type should be one of "Debit_Card", "Credit_Card" 
 
 
 WHEN EX_QTY_ISSUE then 
-DBMS_OUTPUT.PUT_LINE ('Quanity cannot be null or less then 1');
+DBMS_OUTPUT.PUT_LINE ('Quantity cannot be greater than the available quanity in the inventory');
 
-WHEN OTHERS then 
-DBMS_OUTPUT.PUT_LINE ('You have not entered a valid customer or product ID. Please check and enter values that are present in our database');
+WHEN EX_ID_ISSUE then 
+DBMS_OUTPUT.PUT_LINE ('You have not entered a valid customer ID or product_id');
+
+
+--WHEN EX_PRD_ISSUE then 
+--DBMS_OUTPUT.PUT_LINE ('You have not entered a valid Product ID');
 
 
 
 rollback;
 end;
-
-EXECUTE PROCEDURE_ORDERS_INSERT ('24-JAN-2023', 'C1013', 'Debit_Card', 1, 'P103', 'Confirmed');
-
-select * from ofd_order_details;
-
-select * from ofd_orders;
-
-select * from ofd_products;
 
