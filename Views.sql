@@ -9,7 +9,7 @@ BEGIN
     FOR avg_order_value IN (SELECT * FROM ofd_avg_order_value_last_week) LOOP
         DBMS_OUTPUT.PUT_LINE(
             RPAD('Product Name: ' || avg_order_value.product_name, 30) || 
-            LPAD('Average Order Value: $' || avg_order_value.avg_order_value, 30)
+            RPAD('Average Order Value: $' || avg_order_value.avg_order_value, 30)
         );
     END LOOP;
     
@@ -21,8 +21,8 @@ BEGIN
     FOR product_sales_by_supplier IN (SELECT * FROM ofd_product_sales_by_supplier) LOOP
         DBMS_OUTPUT.PUT_LINE(
             RPAD('Supplier Name: ' || product_sales_by_supplier.supplier_name, 30) || 
-            LPAD('Total Quantity Sold: ' || product_sales_by_supplier.total_quantity, 30) ||
-            LPAD('Total Revenue: $' || product_sales_by_supplier.total_revenue, 30)
+            RPAD('Total Quantity Sold: ' || product_sales_by_supplier.total_quantity, 30) ||
+            RPAD('Total Revenue: $' || product_sales_by_supplier.total_revenue, 30)
         );
     END LOOP;
     
@@ -34,7 +34,7 @@ BEGIN
     FOR sales_by_payment_type IN (SELECT * FROM ofd_sales_by_payment_type) LOOP
         DBMS_OUTPUT.PUT_LINE(
             RPAD('Payment Type: ' || sales_by_payment_type.payment_type, 30) || 
-            LPAD('Total Revenue: $' || sales_by_payment_type.total_revenue, 30)
+            RPAD('Total Revenue: $' || sales_by_payment_type.total_revenue, 30)
         );
     END LOOP;
     
@@ -49,7 +49,7 @@ BEGIN
             RPAD('Product Name: ' || out_of_stock_product.product_name, 30) || 
             RPAD('Supplier Name: ' || out_of_stock_product.supplier_name, 30) || 
             RPAD('Category: ' || out_of_stock_product.category_name, 20) || 
-            LPAD('Units in Stock: ' || out_of_stock_product.unit_in_stock, 20)
+            RPAD('Units in Stock: ' || out_of_stock_product.unit_in_stock, 20)
         );
     END LOOP;
     
@@ -74,6 +74,8 @@ END;
     ofd_sales_report ;
 END;
 /
+
+
 
 
 
